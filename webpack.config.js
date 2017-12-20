@@ -7,7 +7,7 @@ const name         = 'Dream_ui';
 const version      = 'v1';
 
 const TestEntry    = `./components/${process.env.path}/demo/index.js`;
-const TestOutput   = `./components/${process.env.path}/demo/dist`;
+const TestOutput   = `./components/${process.env.path}/demo`;
 const ProductOutput= `./dist/`;
 const ProductEntry = `./${project}/index.js`;
 
@@ -55,7 +55,8 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.BannerPlugin("lea出品"), //  编译文件加注释
+        //  编译文件加注释
+        new webpack.BannerPlugin("lea出品"), 
         // new webpack.optimize.UglifyJsPlugin(),// 压缩
         // new ExtractTextPlugin(`${name}_${version}.min.css`)// 分离css
     ]

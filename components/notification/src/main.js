@@ -12,13 +12,12 @@ let Notification = function (options) {
     const _OFFSET       = 16;     //默认上下左右偏移16px
     const _MARGIN       = 5;
     let position        = options.position || 'top-right';
+    let CurrentOffset   = {};
     let vertical        = position.split('-')[0];
     let horizontal      = position.split('-')[1]; 
-    let CurrentOffset   = {};
-
-    CurrentOffset[vertical] = CurrentOffset[horizontal] = _OFFSET;
 
     //设置提示框高度
+    CurrentOffset[vertical] = CurrentOffset[horizontal] = _OFFSET;
     InstanceArr.filter((instance) => {
         return instance && instance.position === position;
     }).forEach((item) => {
@@ -39,7 +38,6 @@ let Notification = function (options) {
   	instance.vm = instance.$mount();
     //插入提示框
   	document.body.appendChild(instance.vm.$el);
-
     InstanceArr[tag] = instance;
     tag++;
 }

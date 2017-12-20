@@ -8,6 +8,9 @@ module.exports = {
         'postcss-calc':{},
         'postcss-nested':{},
         'precss':{},
-        'cssnano': {}, 
+        'cssnano': {
+            //防止打包的z-index被修改
+            "safe" : true
+        }, 
     }
 }
