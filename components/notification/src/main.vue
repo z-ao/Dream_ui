@@ -15,7 +15,7 @@
             @click="clickEvent"
             >
             <DIcon 
-                v-if="type" 
+                v-if="!!type" 
                 class="d-notification__icon" 
                 :class="'d-icon-' + type" 
                 :IconName="typeStyle[type]"
@@ -34,9 +34,9 @@
 <script type="text/javascript">
 /*
 **  params title            提示框标题           {string}
-**  params content          提示语              {string}
+**  params content          提示内容              {string}
 **  params type             类型                {string}      [success, warning, info, error]
-**  params duration         延时关闭时间         {number}      @default    4500
+**  params duration         延时关闭时间         {number}      @default    4000
 **  params AutoGone         自动消失             {string}      @default    true
 **  params position         出现的位置           {string}      @default    'top-left'
 **  params click            点击提示框事件       {function}
@@ -50,7 +50,7 @@ export default {
             title: '',
             content: '',
             type: '',
-            duration: 4500,
+            duration: 4000,
             AutoGone: 'true',
             position: 'top-left',
             offset: {},
@@ -102,7 +102,6 @@ export default {
             Object.keys(this.offset).forEach((key) => {
                 Style[key] = this.offset[key] + 'px';
             });
-
             return Style;
         },
         sideClass() {
