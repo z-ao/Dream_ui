@@ -8,56 +8,78 @@
         <transition name="c-datepicker-transition">
             <div class="c-datepicker__container" v-show="isShowPanel" ref="datepickerPanel">
                 <div class="c-datepicker__header">
-                    <object data="./arrow.svg" width="0" height="0" type="image/svg+xml" codebase="http://www.adobe.com/svg/viewer/imstall/" />
                     <a href="javascript:;" class="c-datepicker__arrow c-datepicker__arrow--left" @click="viewYear--">
                         <svg viewBox="0 0 448 512" style="fill: currentColor;">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ArrrowLeftDouble"></use>
                         </svg>
                     </a>
-                    <a href="javascript:;" class="c-datepicker__arrow c-datepicker__arrow--left" @click="turnOnPrevMonth">
+                    <a href="javascript:;"
+                       v-if="type === 'date'"
+                       class="c-datepicker__arrow c-datepicker__arrow--left"
+                       @click="turnOnPrevMonth">
                         <svg viewBox="0 0 256 512" style="fill: currentColor;">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ArrrowLeft"></use>
                         </svg>
                     </a>
                     <span class="c-datepicker__label">{{viewYear}}年</span>
-                    <span class="c-datepicker__label">{{viewMonth + 1}}月</span>
+                    <span class="c-datepicker__label" v-if="type === 'date'">{{viewMonth + 1}}月</span>
                     <a href="javascript:;" class="c-datepicker__arrow c-datepicker__arrow--right"  @click="viewYear++">
                         <svg viewBox="0 0 448 512" style="fill: currentColor;">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ArrrowRightDouble"></use>
                         </svg>
                     </a>
-                    <a href="javascript:;" class="c-datepicker__arrow c-datepicker__arrow--right" @click="turnOnNextMonth">
+                    <a href="javascript:;"
+                        v-if="type === 'date'"
+                        class="c-datepicker__arrow c-datepicker__arrow--right"
+                        @click="turnOnNextMonth">
                         <svg viewBox="0 0 256 512" style="fill: currentColor;">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#ArrrowRight"></use>
                         </svg>
                     </a>
                 </div>
-                <div class="c-datepicker__body">
-                    <date-panel
-                        :date-arr="dateArr"
-                        :view-year="viewYear"
-                        :view-month="viewMonth"
-                        :choose-date="viewChooseDate"
-                        @choose-date="chooseDateEvent"></date-panel>
+
+                <month-panel
+                    v-if="type === 'month'"
+                    :view-year="viewYear"
+                    :view-choose-date="viewChooseDate"
+                    :disabled-date="disabledDate"
+                    @pick="chooseDateEvent"></month-panel>
+
+                <date-panel
+                    v-if="type === 'date'"
+                    :view-year="viewYear"
+                    :view-month="viewMonth"
+                    :view-choose-date="viewChooseDate"
+                    :disabled-date="disabledDate"
+                    @pick="chooseDateEvent"></date-panel>
+
+                <div class="c-datepicker__footer" v-if="other">
+                    <a href="javascript:;"
+                       class="c-datepicker__btn"
+                       v-for="(item, index) in other"
+                       :key="index"
+                       @click="otherClickEvent(item.value)"
+                       v-text="item.text"></a>
                 </div>
             </div>
         </transition>
-        <template>
-            <svg width="0" height="0" viewBox="0 0 490 239">
-                <def>
-                    <path id="ArrrowLeftDouble" d="M223.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L319.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L393.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34zm-192 34l136 136c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L127.9 256l96.4-96.4c9.4-9.4 9.4-24.6 0-33.9L201.7 103c-9.4-9.4-24.6-9.4-33.9 0l-136 136c-9.5 9.4-9.5 24.6-.1 34z"/>
-                    <path id="ArrrowLeft" d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"/>
-                    <path id="ArrrowRightDouble" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34zm192-34l-136-136c-9.4-9.4-24.6-9.4-33.9 0l-22.6 22.6c-9.4 9.4-9.4 24.6 0 33.9l96.4 96.4-96.4 96.4c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l136-136c9.4-9.2 9.4-24.4 0-33.8z"/>
-                    <path id="ArrrowRight" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/>
-                </def>
-            </svg>
-        </template>
+        <!-- 选择器的icon -->
+        <svg width="0" height="0">
+            <def>
+                <path id="ArrrowLeftDouble" d="M223.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L319.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L393.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34zm-192 34l136 136c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9L127.9 256l96.4-96.4c9.4-9.4 9.4-24.6 0-33.9L201.7 103c-9.4-9.4-24.6-9.4-33.9 0l-136 136c-9.5 9.4-9.5 24.6-.1 34z"/>
+                <path id="ArrrowLeft" d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"/>
+                <path id="ArrrowRightDouble" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34zm192-34l-136-136c-9.4-9.4-24.6-9.4-33.9 0l-22.6 22.6c-9.4 9.4-9.4 24.6 0 33.9l96.4 96.4-96.4 96.4c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l136-136c9.4-9.2 9.4-24.4 0-33.8z"/>
+                <path id="ArrrowRight" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"/>
+            </def>
+        </svg>
     </div>
 </template>
 
 <script>
-    import { pattern } from './utils/date';
-    import datePanel from './panel/DatePanel';
+    import { pattern } from '@/utils/date'
+    import { on, off } from '@/utils/dom'
+    import datePanel from './panel/DatePanel'
+    import monthPanel from './panel/monthPanel'
     export default{
         name: 'cDatePicker',
 
@@ -65,17 +87,33 @@
             prop: 'datepickerVal',
             event: 'dateChange'
         },
+
         props: {
             datepickerVal: {
                 type: [Date, String],
                 required: true
+            },
+            type: {
+                type: String,
+                default: 'date'
+            },
+            format: {
+                type: String,
+                default: ''
+            },
+            disabledDate: {
+                type: Function
+            },
+            other: {
+                type: Array,
+                default: false
             }
         },
 
         data() {
             return {
                 viewYear: 1990,
-                viewMonth: 1,
+                viewMonth: 0,
                 viewDate: 1,
                 viewChooseDate: '',
 
@@ -91,6 +129,12 @@
                 this.viewDate = NowDate.getDate();
                 this.viewChooseDate = NowDate
             }
+        },
+        mounted() {
+            on(document.body, 'click', this.outsideClick)
+        },
+        destroyed() {
+            off(document.body, 'click', this.outsideClick)
         },
         methods: {
             //打开上一月
@@ -111,11 +155,20 @@
                     this.viewMonth++;
                 }
             },
+            otherClickEvent(val) {
+                this.inputVal = val;
+                this.$emit('dateChange', val);
+                this.isShowPanel = false;
+            },
+            //选择日期事件
             chooseDateEvent(date) {
-                this.viewChooseDate = date;
-                this.inputVal = pattern(date, 'yyyy-MM-dd');
-                this.$emit('dateChange', date);
+                if (!date instanceof Date) return;
 
+                const dateStr = this._format(date);
+                this.$emit('dateChange', dateStr);
+
+                this.inputVal = dateStr;
+                this.viewChooseDate = date;
                 this.isShowPanel = false;
             },
             showPanelEvent(evt) {
@@ -142,43 +195,43 @@
                 } else {
                     $datepickerPanel.style.top = inputHeight + 2 + 'px';
                 }
-            }
-        },
-        computed: {
-            dateArr() { //当前日期的面版数据
-                let ret = [];
+            },
+            //外层点击事件
+            outsideClick(evt) {
+                let $target = evt.target;
 
-                const dateActiveFirst = new Date(this.viewYear, this.viewMonth, 1); //当前月的第一天
-                const dateActiveLast = new Date(this.viewYear, this.viewMonth + 1, 0); //当前月的最后一天
-                const EmtryCountOnRowFisrt = dateActiveFirst.getDay(); //第一行有多少个空格
-
-                const col = 7, row = 6;//7列6行
-                let retIndex = -1; //三维数组
-                for (let i = 0; i < col * row; i++) {
-                    let date = '';
-
-                    const isPrevMonth = i < EmtryCountOnRowFisrt;//上一个月
-                    const isNextMonth = i >= dateActiveLast.getDate() + EmtryCountOnRowFisrt; //下一月
-                    if (!isPrevMonth && !isNextMonth) {
-                        date = i - EmtryCountOnRowFisrt + 1;
-                    }
-
-                    if (i % 7 === 0) {
-                        retIndex++;
-                        ret[retIndex] = [];
-                    }
-                    ret[retIndex].push(date);
+                if (!this.$refs['datepicker'].contains($target)) {//点击外层事件
+                    this.isShowPanel = false;
                 }
-                return ret;
+            },
+            //根据开发者传入的format或type输出对应的格式
+            _format(date) {
+                if (this.format) {
+                    return pattern(date, this.format);
+                }
+
+                let format;
+                switch(this.type) {
+                    case 'date':
+                        format = 'yyyy-MM-dd';
+                        break;
+                    case 'month':
+                        format = 'yyyy-MM';
+                        break;
+                    default:
+                        format = 'yyyy-MM-dd';
+                }
+                return pattern(date, format);
             }
         },
         components: {
-            'date-panel': datePanel
+            'date-panel': datePanel,
+            'month-panel': monthPanel
         }
     }
 </script>
 
-<style lang="scss">
+<style lang="less">
     .c-datepicker__wrapper{
         position: relative;
 
@@ -207,7 +260,7 @@
             border-radius: 4px;
             border: 1px solid #fff;
             box-shadow: 0 2px 8px rgba(0,0,0,.15);
-            transition: opacity .5s;
+            transition: opacity .2s;
             z-index: 99;
 
             .c-datepicker__header{
@@ -254,9 +307,18 @@
                 }
             }
 
-            .c-datepicker__body{
-                padding: 8px 12px;
-                transition: all .5s;
+            .c-datepicker__footer{
+                height: 39px;
+                line-height: 38px;
+                padding: 0 12px;
+                border-top: 1px solid #e8e8e8;
+                clear: both;
+
+                .c-datepicker__btn{
+                    float: right;
+                    margin-left: 8px;
+                    color: #1890ff;
+                }
             }
         }
     }

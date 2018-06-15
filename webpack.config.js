@@ -6,19 +6,31 @@ const project      = 'src';
 const name         = 'Dream_ui';
 const version      = 'v1';
 
-const TestEntry    = `./components/${process.env.path}/demo/index.js`;
-const TestOutput   = `./components/${process.env.path}/demo`;
+const TestEntry    = `./src/components/${process.env.path}/demo/index.js`;
+const TestOutput   = `./src/components/${process.env.path}/demo`;
 const ProductOutput= `./dist/`;
 const ProductEntry = `./${project}/index.js`;
 
 const FOLDER_ENTRY  = process.env.path? TestEntry: ProductEntry;
 const FOLDER_OUTPUT = process.env.path? TestOutput: ProductOutput;
 
+//处理当前文件夹的相对路径
+function resolve (dir) {
+  return path.join(__dirname, './', dir)
+}
+
 module.exports = {
     entry: FOLDER_ENTRY,
     output: {
         path: path.resolve(__dirname, FOLDER_OUTPUT),
         filename: `${name}_${version}.min.js`
+    },
+    resolve: {
+    extensions: ['.js', '.vue', '.json'],//引入这些文件不需代扩展名
+        alias: {//引入模块使用的别名
+            'vue$': 'vue/dist/vue.esm.js',
+            '@': resolve('src'),
+        }
     },
     module: {
         rules: [

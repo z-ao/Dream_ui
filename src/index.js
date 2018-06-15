@@ -1,9 +1,11 @@
-import Notification from '../components/notification/index.js';
-import VIcon        from '../components/iconfont/index.js';
+import Notification from './components/notification/index.js';
+import VIcon        from './components/iconfont/index.js';
+import VDatePicker  from './components/datepicker/index.js';
 
 let Dream_ui = {
 	Notification: Notification,
-	VIcon: VIcon
+	VIcon: VIcon,
+	VDatePicker: VDatePicker
 }
 
 export default Dream_ui;
