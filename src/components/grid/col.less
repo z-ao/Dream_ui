@@ -1,0 +1,55 @@
+//下方高能,
+//一大推循环
+@ALL_COL: 24; //一共24拦
+
+.col-loop (@prefix, @property) when (@i <= @ALL_COL) {
+	@val: @i / @ALL_COL * 100;
+    .d-col__@{prefix}-@{i} {
+        @{property}: ~"@{val}%";
+    }
+    .col-loop(@prefix, @property, @i + 1);
+}
+
+.col-loop(@prefix: span, @property: width);
+.col-loop(@prefix: push, @property: left);
+.col-loop(@prefix: pull, @property: right);
+.col-loop(@prefix: offset, @property: margin-left);
+
+.d-col{
+	position: relative;
+}
+
+@media only screen and (max-width: 768px) {
+	.col-loop(@prefix: xs--span, @property: width);
+	.col-loop(@prefix: xs--push, @property: left);
+	.col-loop(@prefix: xs--pull, @property: right);
+	.col-loop(@prefix: xs--offset, @property: margin-left);
+}
+
+@media only screen and (min-width: 768px) {
+	.col-loop(@prefix: sm--span, @property: width);
+	.col-loop(@prefix: sm--push, @property: left);
+	.col-loop(@prefix: sm--pull, @property: right);
+	.col-loop(@prefix: sm--offset, @property: margin-left);
+}
+
+@media only screen and (min-width: 992px) {
+	.col-loop(@prefix: md--span, @property: width);
+	.col-loop(@prefix: md--push, @property: left);
+	.col-loop(@prefix: md--pull, @property: right);
+	.col-loop(@prefix: md--offset, @property: margin-left);
+}
+
+@media only screen and (min-width: 1200px) {
+	.col-loop(@prefix: lg--span, @property: width);
+	.col-loop(@prefix: lg--push, @property: left);
+	.col-loop(@prefix: lg--pull, @property: right);
+	.col-loop(@prefix: lg--offset, @property: margin-left);
+}
+
+@media only screen and (min-width: 1920px) {
+	.col-loop(@prefix: xl--span, @property: width);
+	.col-loop(@prefix: xl--push, @property: left);
+	.col-loop(@prefix: xl--pull, @property: right);
+	.col-loop(@prefix: xl--offset, @property: margin-left);
+}

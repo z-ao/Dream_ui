@@ -53,10 +53,10 @@
                     :disabled-date="disabledDate"
                     @pick="chooseDateEvent"></date-panel>
 
-                <div class="c-datepicker__footer" v-if="other">
+                <div class="c-datepicker__footer" v-if="footerBtn">
                     <a href="javascript:;"
                        class="c-datepicker__btn"
-                       v-for="(item, index) in other"
+                       v-for="(item, index) in footerBtn"
                        :key="index"
                        @click="otherClickEvent(item.value)"
                        v-text="item.text"></a>
@@ -80,8 +80,9 @@
     import { on, off } from '@/utils/dom'
     import datePanel from './panel/DatePanel'
     import monthPanel from './panel/monthPanel'
+
     export default{
-        name: 'cDatePicker',
+        name: 'dDatepicker',
 
         model: {
             prop: 'datepickerVal',
@@ -104,31 +105,39 @@
             disabledDate: {
                 type: Function
             },
-            other: {
+            footerBtn: {
                 type: Array,
                 default: false
             }
         },
 
         data() {
+            const NowDate = new Date();
             return {
-                viewYear: 1990,
-                viewMonth: 0,
-                viewDate: 1,
-                viewChooseDate: '',
+                viewYear: NowDate.getFullYear(),
+                viewMonth: NowDate.getMonth(),
+                viewDate: NowDate.getDate(),
+                viewChooseDate: NowDate,
 
                 inputVal: '',
                 isShowPanel: false
             }
         },
         created() {
-            if (!this.datepickerVal) {
-                const NowDate = new Date();
-                this.viewYear = NowDate.getFullYear();
-                this.viewMonth = NowDate.getMonth();
-                this.viewDate = NowDate.getDate();
-                this.viewChooseDate = NowDate
-            }
+            switch(true) {
+                case this.datepickerVal instanceof Date:
+                    this.viewYear       = this.datepickerVal.getFullYear();
+                    this.viewMonth      = this.datepickerVal.getMonth();
+                    this.viewDate       = this.datepickerVal.getDate();
+                    this.viewChooseDate = this.datepickerVal;
+                    this.inputVal       = this._format(this.datepickerVal);
+                    break;
+                case !!this.datepickerVal:
+                    this.inputVal = this.datepickerVal;
+                    break;
+                default:
+                    break;
+            };
         },
         mounted() {
             on(document.body, 'click', this.outsideClick)
