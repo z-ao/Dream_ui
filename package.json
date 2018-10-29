@@ -1,6 +1,6 @@
 {
   "name": "dream",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "vue ui",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "Dream",
     "ui"
   ],
-  "author": "lea",
+  "author": "z-ao",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/z-ao/Dream_ui/issues"

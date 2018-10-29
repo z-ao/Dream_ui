@@ -1,6 +1,7 @@
 const webpack    = require('webpack');
 const path       = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const project      = 'src';
 const name         = 'Dream_ui';
@@ -54,11 +55,10 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                use: [
-                    'style-loader',
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
-                    'less-loader'
-                ]
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader', 'less-loader']
+                })
             },
             {   //picture
               test: /\.(png|jpg|gif)$/,
@@ -77,7 +77,8 @@ module.exports = {
     plugins: [
         //  编译文件加注释
         new webpack.BannerPlugin("lea出品"), 
+        new VueLoaderPlugin(),
         // new webpack.optimize.UglifyJsPlugin(),// 压缩
-        // new ExtractTextPlugin(`${name}_${version}.min.css`)// 分离css
+        new ExtractTextPlugin(`${name}_${version}.min.css`)// 分离css
     ]
 }
